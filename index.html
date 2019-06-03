@@ -52,16 +52,23 @@
       console.log('Connected to socket ...');
 
       //Handle output
-      socket.on('output', (data) => {
-        if (data.length){
-          for(var x = 0;x<data.length;x++){
+      socket.on('title', (data) => {
+        if (data){
+
             //Build out message
             var message = document.createElement('div');
-            message.setAttribute('class', 'chat-message');
-            message.textContent = data[x].name+": "+data[x].message;
+            message.setAttribute('id', data.title);
+            message.textContent = data.title;
             messages.appendChild(message);
             messages.insertBefore(message, messages.firstChild);
-          }
+
+        }
+      });
+
+      socket.on('complete', (data) => {
+        if (data){
+          var item = element(data);
+          item.textContent += ' COMPLETED';
         }
       });
 
@@ -72,20 +79,17 @@
           socket.emit('input', {
             videourl:urlinput.value
           });
-
+          urlinput.value = '';
           event.preventDefault();
         }
       })
 
       //Handle Chat Clear
       clearBtn.addEventListener('click', () => {
-        socket.emit('clear');
+        messages.textContent = '';
       });
 
-      //Clear Message
-      socket.on('cleared', () => {
-        messages.textContent = '';
-      })
+
     }
 
   })();

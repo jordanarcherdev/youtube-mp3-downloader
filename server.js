@@ -20,6 +20,10 @@ io.on('connection', (socket) => {
       if(err) console.log;
       let title = info.title;
       counter++;
+      let data = {
+        title: title
+      }
+      socket.emit('title', data);
       console.log(title);
       console.log(`Counter: ${counter}`);
 
@@ -40,6 +44,7 @@ io.on('connection', (socket) => {
       .on('end', () => {
         console.log(`\ndone, thanks - ${(Date.now() - start) / 1000}s`);
         counter--;
+        socket.emit('complete', title)
         console.log(`Counter: ${counter}`);
     });
     })
